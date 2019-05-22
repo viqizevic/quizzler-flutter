@@ -30,6 +30,24 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreList = [];
 
+  void checkAnswer(userPickedAnswer) {
+    bool answer = quizBrain.getQuestionAnswer();
+    setState(() {
+      if (userPickedAnswer == answer) {
+        scoreList.add(Icon(
+          Icons.check,
+          color: Colors.green,
+        ));
+      } else {
+        scoreList.add(Icon(
+          Icons.close,
+          color: Colors.red,
+        ));
+      }
+      quizBrain.nextQuestion();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -66,22 +84,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                bool answer = quizBrain.getQuestionAnswer();
-                if (true == answer) {
-                  scoreList.add(Icon(
-                    Icons.check,
-                    color: Colors.green,
-                  ));
-                } else {
-                  scoreList.add(Icon(
-                    Icons.close,
-                    color: Colors.red,
-                  ));
-                }
-                //The user picked true.
-                setState(() {
-                  quizBrain.nextQuestion();
-                });
+                checkAnswer(true);
               },
             ),
           ),
@@ -100,26 +103,11 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
-                bool answer = quizBrain.getQuestionAnswer();
-                if (false == answer) {
-                  scoreList.add(Icon(
-                    Icons.check,
-                    color: Colors.green,
-                  ));
-                } else {
-                  scoreList.add(Icon(
-                    Icons.close,
-                    color: Colors.red,
-                  ));
-                }
-                setState(() {
-                  quizBrain.nextQuestion();
-                });
+                checkAnswer(false);
               },
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
         Row(
           children: scoreList,
         ),
