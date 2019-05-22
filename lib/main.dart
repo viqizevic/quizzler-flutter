@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'quiz_brain.dart';
 
 QuizBrain quizBrain = QuizBrain();
@@ -33,18 +34,28 @@ class _QuizPageState extends State<QuizPage> {
   void checkAnswer(userPickedAnswer) {
     bool answer = quizBrain.getQuestionAnswer();
     setState(() {
-      if (userPickedAnswer == answer) {
-        scoreList.add(Icon(
-          Icons.check,
-          color: Colors.green,
-        ));
+      if (quizBrain.isFinished()) {
+        Alert(
+                context: context,
+                title: "Quizzler",
+                desc: "You answered all questions.")
+            .show();
+        quizBrain.reset();
+        scoreList.clear();
       } else {
-        scoreList.add(Icon(
-          Icons.close,
-          color: Colors.red,
-        ));
+        if (userPickedAnswer == answer) {
+          scoreList.add(Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+        } else {
+          scoreList.add(Icon(
+            Icons.close,
+            color: Colors.red,
+          ));
+        }
+        quizBrain.nextQuestion();
       }
-      quizBrain.nextQuestion();
     });
   }
 
